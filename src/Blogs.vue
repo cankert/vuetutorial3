@@ -1,10 +1,11 @@
 <template>
   <div class="blogs">
     <h2>{{ blogTitle }}</h2>
+    <input type="text" v-model="searchTerm">
     <button @click="changeTitle">Change Title</button>
-    <div v-for="post in posts" :key="post.id">
+    <div v-for="post in filteredPosts" :key="post.id">
       <h3>{{ post.title }}</h3>
-      <p>{{ post.body }}</p>
+      <p>{{ post.body | snippet}}</p>
     </div>
   </div>
 </template>
@@ -16,12 +17,20 @@ export default {
   data() {
     return {
       blogTitle: "Blogs",
-      posts: []
+      posts: [],
+      searchTerm: ""
     };
   },
   methods: {
     changeTitle() {
       this.blogTitle = "Amazing";
+    }
+  },
+  computed: {
+    filteredPosts() {
+      return this.posts.filter(post => {
+        return post.title.match(this.searchTerm);
+      });
     }
   },
   created() {
